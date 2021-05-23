@@ -1,3 +1,4 @@
+import * as http from 'http'
 import * as Discord from 'discord.js'
 import { processCheater, checkCheater } from './cheaters'
 
@@ -82,3 +83,13 @@ client.on('ready', () => {
 })
 
 client.login(process.env.DISCORD_TOKEN)
+
+const server = http.createServer((_, res) => {
+  res.writeHead(200);
+  res.end("My first server!");
+})
+const HOST = process.env.HOST || 'localhost'
+const PORT = process.env.PORT || '3000'
+server.listen(PORT, HOST, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
+})
