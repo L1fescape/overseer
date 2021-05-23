@@ -89,7 +89,7 @@ const server = http.createServer((_, res) => {
   res.end("My first server!");
 })
 const HOST = process.env.HOST || 'localhost'
-const PORT = process.env.PORT || '3000'
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
 server.listen(PORT, HOST, () => {
-    console.log(`Server is running on http://${HOST}:${PORT}`);
+  console.log(`Server is running on http://${HOST}:${PORT}`);
 })
