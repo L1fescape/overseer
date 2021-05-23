@@ -1,0 +1,17 @@
+version: '3'
+services:
+  bot:
+    container_name: bot.overseer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3003'
+    volumes:
+      - .:/opt/overseer
+    depends_on:
+      - db
+
+  db:
+    container_name: db.overseer
+    image: "redis"
