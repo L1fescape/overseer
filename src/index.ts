@@ -87,10 +87,9 @@ const server = http.createServer((_, res) => {
   res.writeHead(200);
   res.end("My first server!");
 })
-const HOST = process.env.HOST || 'localhost'
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
 
-server.listen(PORT, HOST, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`)
   client.login(process.env.DISCORD_TOKEN)
 })
