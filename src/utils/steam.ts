@@ -8,6 +8,14 @@ const vanityCheckURL =
 
 const usernameURL = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/'
 
+export function getSteamLink(steamId: string): string {
+  return `https://steamcommunity.com/profiles/${steamId}`
+}
+
+export function getSteamMDLink(username: string, steamId: string): string {
+  return `[${username}](${getSteamLink(steamId)})`
+}
+
 async function getVanity(steamId: string) {
   if (!STEAM_API_KEY) {
     console.error('steam api key not provided')
@@ -32,7 +40,12 @@ async function getVanity(steamId: string) {
   return null
 }
 
-export async function getSteamUsername(steamId: string) {
+export interface SteamProfile {
+  personaname: string
+  avatar: string
+}
+
+export async function getSteamProfile(steamId: string): Promise<SteamProfile> {
   const params = {
     key: process.env.STEAM_API_KEY,
     steamids: steamId,
@@ -43,7 +56,7 @@ export async function getSteamUsername(steamId: string) {
   })
 
   if (data.response) {
-    return data.response.players[0].personaname
+    return data.response.players[0]
   }
 
   return null
