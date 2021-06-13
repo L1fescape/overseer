@@ -32,7 +32,10 @@ export async function getCSGOStats(steamId64: string): Promise<CSGOStats> {
   const kda = $('#kpd > span').text().trim()
   const hltvRating = $('#rating > span').text().trim()
   const rankSrc = $('img[src*="ranks"]').attr('src')
-  const rankNum = rankSrc.substring(rankSrc.indexOf('/ranks/') + 7).replace('.png', '')
+  let rankNum = ''
+  if (rankSrc) {
+    rankNum = rankSrc.substring(rankSrc.indexOf('/ranks/') + 7).replace('.png', '')
+  }
 
   return {
     kda,
