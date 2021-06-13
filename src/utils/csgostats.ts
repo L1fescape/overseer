@@ -37,6 +37,10 @@ export async function getCSGOStats(steamId64: string): Promise<CSGOStats> {
     rankNum = rankSrc.substring(rankSrc.indexOf('/ranks/') + 7).replace('.png', '')
   }
 
+  if (process.env.DEBUG) {
+    console.log(kda, hltvRating, url, rankNum)
+  }
+
   return {
     kda,
     hltvRating,
