@@ -7,10 +7,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3003'
-    environment:
-      - DISCORD_TOKEN=ODUzMDQwODEyNjkwNzY3ODgy.YMPmKg.0RbiKC8wXtahNdkzy6vcul1E31M
-      - STEAM_API_KEY=30A4B426D419DF539D9E698AF7A8243D
-      - REDIS_URL=redis://db:6379
+    env_file:
+      - .env
     volumes:
       - .:/opt/overseer
     depends_on:
