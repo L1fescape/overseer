@@ -35,6 +35,9 @@ export function getRankFromNum(num: string) {
 }
 
 export const getColorFromRankNum = (num: string) => {
+  if (!num) {
+    return '#ffffff'
+  }
   const numInt = parseInt(num, 10)
   if (numInt <= 6) {
     return colors.grey
