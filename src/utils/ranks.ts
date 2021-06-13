@@ -31,7 +31,7 @@ export const colors = {
 }
 
 export function getRankFromNum(num: string) {
-  return ranks[num] || 'unknown'
+  return ranks[num] || ''
 }
 
 export const getColorFromRankNum = (num: string) => {
