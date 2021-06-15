@@ -28,15 +28,16 @@ export const colors = {
   blue: '#5865f2',
   gold: '#ffab12',
   black: '#000000',
+  white: '#ffffff'
 }
 
 export function getRankFromNum(num: string) {
-  return ranks[num] || 'no rank'
+  return ranks[num]
 }
 
 export const getColorFromRankNum = (num: string) => {
   if (!num) {
-    return '#ffffff'
+    return colors.white
   }
   const numInt = parseInt(num, 10)
   if (numInt <= 6) {

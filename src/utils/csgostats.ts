@@ -9,21 +9,26 @@ export interface CSGOStats {
   hltvRating: string
   url: string
   rankNum: string
+  matches: string
 }
 
 export async function getCSGOStats(steamId64: string): Promise<CSGOStats> {
+  const url = `https://csgostats.gg/player/${steamId64}`
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
-  const page = await browser.newPage()
+  let html = ''
 
-  await page.setJavaScriptEnabled(true)
-
-  const url = `https://csgostats.gg/player/${steamId64}`
-  await page.goto(url)
-
-  const html = await page.content()
-  await browser.close()
+  try { 
+    const page = await browser.newPage()
+    await page.setJavaScriptEnabled(true)
+    await page.goto(url)
+    html = await page.content()
+  } catch (e) {
+    console.error('puppeteer csgostats error', e)
+  } finally {
+    await browser.close()
+  }
 
   const $ = cheerio.load(html, {
     normalizeWhitespace: true,
@@ -36,15 +41,13 @@ export async function getCSGOStats(steamId64: string): Promise<CSGOStats> {
   if (rankSrc) {
     rankNum = rankSrc.substring(rankSrc.indexOf('/ranks/') + 7).replace('.png', '')
   }
-
-  if (process.env.DEBUG) {
-    console.log(kda, hltvRating, url, rankNum)
-  }
+  const matches = $('#competitve-wins').text().trim().replace('Comp. Wins', '')
 
   return {
     kda,
     hltvRating,
     url,
     rankNum,
+    matches,
   }
 }

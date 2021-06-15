@@ -5,6 +5,7 @@ import { CSGOStats, getCSGOStats } from './utils/csgostats'
 import { Cheater, getCheater, getWhitelist } from './utils/db'
 import { reportCountToString } from './utils/reports'
 import { getCSGOStatsMDLink, getRankFromNum } from './utils/ranks'
+import { getFaceit, FaceitStats } from './utils/faceit'
 
 const asyncGetPlayer = async (id: string) => await getSteam(id)
 const asyncGetWhitelist = async (id: string) => await getWhitelist(id)
@@ -14,6 +15,7 @@ export interface PlayerInfo {
   steamId: string
   profile: SteamProfile
   csgoStats: CSGOStats
+  faceitStats?: FaceitStats
   cheater: Cheater
 }
 
@@ -67,12 +69,14 @@ async function getPlayerInfo(steam: SteamID): Promise<PlayerInfo> {
   }
   const profile = await getSteamProfile(steamId).catch(() => null)
   const csgoStats = await getCSGOStats(steamId)
+  const faceitStats = await getFaceit(steamId)
   const cheater = await getCheater(steamId)
 
   return {
     steamId,
     profile,
     csgoStats,
+    faceitStats,
     cheater,
   }
 }

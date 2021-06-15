@@ -15,3 +15,7 @@ export function reportsToString(reports: Report[]): string {
 export function reportCountToString(reports: Report[]): string {
   return `${reports.length} time${reports.length === 1 ? '' : 's'}`
 }
+
+export function reportersToString(reports: Report[]): string {
+  return reports.map(report => report.reporter).join(', ')
+}
