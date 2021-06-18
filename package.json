@@ -17,12 +17,15 @@
     "puppeteer-extra-plugin-stealth": "^2.7.8",
     "redis": "^3.1.2",
     "steamid": "^1.1.3",
+    "ts-node": "^10.0.0",
     "typescript": "^4.2.4"
   },
   "devDependencies": {},
   "scripts": {
     "start": "npm run build && node build/index.js",
     "build": "tsc",
+    "import": "ts-node src/scripts/import.ts",
+    "export": "ts-node src/scripts/export.ts",
     "checkMatch": "tsc src/checkMatch.ts && node build/"
   },
   "author": "",

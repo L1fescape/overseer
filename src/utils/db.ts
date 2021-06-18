@@ -20,6 +20,7 @@ function getCheaterKey(steamid: string): string {
 const client = redis.createClient(process.env.REDIS_URL)
 const getAsync = promisify(client.get).bind(client)
 const setAsync = promisify(client.set).bind(client)
+const getKeysAsync = promisify(client.keys).bind(client)
 
 export async function getCheater(steamid: string): Promise<Cheater> {
   const dbCheater = await getAsync(getCheaterKey(steamid))
@@ -96,4 +97,44 @@ export async function addWhitelist(steamid: string, whitelistedPlayer: Whitelist
   }
 
   return whitelistedPlayer
+}
+
+export interface ExportData {
+  cheaters: Cheater[]
+  whitelist: Whitelist[]
+}
+
+async function getAll(key: string) {
+  const keys = await getKeysAsync(`${key}:*`)
+  const getMapFn = async (key: string) => {
+    const val = await getAsync(key)
+    return JSON.parse(val)
+  }
+  return await Promise.all(keys.map((key: string) => getMapFn(key)))
+}
+
+export async function exportDB(): Promise<ExportData> {
+  const cheaters = await getAll(cheaterDBKey) as Cheater[]
+  const whitelist = await getAll(whitelistDBKey) as Whitelist[]
+
+  return {
+    cheaters,
+    whitelist,
+  }
+}
+
+async function setAll(key: string, data: Cheater[] | Whitelist[]) {
+  const setMapFn = async (item: Cheater | Whitelist) => {
+    if (key === whitelistDBKey) {
+      await setWhitelist(item.steamId, item as Whitelist)
+    } else if (key === cheaterDBKey) {
+      await setCheater(item.steamId, item as Cheater)
+    }
+  }
+  return await Promise.all(data.map((item: Cheater | Whitelist) => setMapFn(item)))
+}
+
+export async function importDB(data: ExportData) {
+  await setAll(cheaterDBKey, data.cheaters)
+  await setAll(whitelistDBKey, data.whitelist)
 }
