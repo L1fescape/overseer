@@ -1,8 +1,15 @@
 {
   "name": "overseer",
   "version": "1.0.0",
-  "description": "",
+  "author": "Andrew Kennedy <akennedy2292@gmail.com> (https://l1fescape.com)",
+  "description": "Discord bot for checking csgo and faceit player stats",
   "main": "index.js",
+  "scripts": {
+    "start": "npm run build && node build/index.js",
+    "build": "tsc",
+    "import": "ts-node src/scripts/import.ts",
+    "export": "ts-node src/scripts/export.ts"
+  },
   "dependencies": {
     "@types/node": "^15.3.0",
     "@types/redis": "^2.8.28",
@@ -21,13 +28,5 @@
     "typescript": "^4.2.4"
   },
   "devDependencies": {},
-  "scripts": {
-    "start": "npm run build && node build/index.js",
-    "build": "tsc",
-    "import": "ts-node src/scripts/import.ts",
-    "export": "ts-node src/scripts/export.ts",
-    "checkMatch": "tsc src/checkMatch.ts && node build/"
-  },
-  "author": "",
   "license": "ISC"
 }

@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   dev:
     container_name: dev.overseer
@@ -8,13 +8,13 @@ services:
     ports:
       - "3003"
     volumes:
-      - ./:/workspace
-      - node_modules:/workspace/node_modules
-    environment:
-      HOST: 0.0.0.0
+      - ./:/workspace:cached
+      - try-overseer-node_modules:/workspace/node_modules
+    env_file:
+      - .devcontainer/devcontainer.env
     depends_on:
       - db
-    command: sleep infinity
+    command: /bin/sh -c "while sleep 1000; do :; done"
 
 volumes:
-  node_modules:
+  try-overseer-node_modules:

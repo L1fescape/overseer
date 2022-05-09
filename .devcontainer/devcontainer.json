@@ -7,7 +7,6 @@
   "workspaceFolder": "/workspace",
   "service": "dev",
   "runServices": ["db", "dev"],
-  "runArgs": ["-it"],
   "extensions": [
     "ms-vscode.vscode-typescript-tslint-plugin",
     "esbenp.prettier-vscode",
@@ -15,8 +14,5 @@
     "eamodio.tsl-problem-matcher",
     "ms-azuretools.vscode-docker",
     "cweijan.vscode-mysql-client2"
-  ],
-  "settings": {
-    "firefox.args": []
-  }
+  ]
 }

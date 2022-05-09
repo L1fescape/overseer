@@ -1,9 +1,9 @@
 import * as Discord from 'discord.js'
 
-import { PlayerInfo } from './check'
-import { getSteamLink } from './utils/steam'
-import { reportCountToString, reportersToString } from './utils/reports'
-import { getRankFromNum, getColorFromRankNum, getCSGOStatsMDLink, colors } from './utils/ranks'
+import { PlayerInfo } from '../check'
+import { getSteamLink } from '../utils/steam'
+import { reportCountToString, reportersToString } from '../utils/reports'
+import { getRankFromNum, getColorFromRankNum, getCSGOStatsMDLink, colors } from '../utils/ranks'
 
 
 const defaultAvatar = 'https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png'
@@ -36,7 +36,7 @@ export function getEmbed({ steamId, profile, csgoStats, cheater, faceitStats }: 
   }
   
   if (cheater) {
-    playerEmbed.addField('WARNING: Player is cheating', `Has been reported ${reportCountToString(cheater.reports)} by ${reportersToString(cheater.reports)}`)
+    playerEmbed.addField('WARNING: Player has previously been reported as a cheater', `Has been reported ${reportCountToString(cheater.reports)} by ${reportersToString(cheater.reports)}`)
   }
 
   return playerEmbed
