@@ -1,3 +1,4 @@
+import { Message } from 'discord.js'
 import * as SteamID from 'steamid'
 
 import { SteamProfile, getSteam, getSteamProfile, getSteamMDLink } from './utils/steam'
@@ -6,6 +7,8 @@ import { Cheater, getCheater, getWhitelist } from './utils/db'
 import { reportCountToString } from './utils/reports'
 import { getCSGOStatsMDLink, getRankFromNum } from './utils/ranks'
 import { getFaceit, FaceitStats } from './utils/faceit'
+
+export const CHECK_PREFIX = '# userid name uniqueid'
 
 const asyncGetPlayer = async (id: string) => await getSteam(id)
 const asyncGetWhitelist = async (id: string) => await getWhitelist(id)
@@ -29,7 +32,7 @@ CSGO Stats: ${getCSGOStatsMDLink(steamId)}
   return str
 }
 
-export async function processCheck(steamUrl: string): Promise<PlayerInfo> {
+export async function processCheck(steamUrl: string, message?: Message): Promise<PlayerInfo> {
   const steam = await getSteam(steamUrl)
   if (!steam) {
     console.log('Error getting steam id from url')
@@ -39,7 +42,7 @@ export async function processCheck(steamUrl: string): Promise<PlayerInfo> {
   return await getPlayerInfo(steam)
 }
 
-export async function processCheckBulk(input: string): Promise<PlayerInfo[]> {
+export async function processCheckBulk(input: string, message: Message): Promise<PlayerInfo[]> {
   const playerIds: string[] = []
   const lines = input.split('\n')
   lines.forEach(line => {

@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs'
-import { importDB, ExportData } from '../utils/db'
+import { importDB, ExportData } from '../src/utils/db'
 
 (async () => {
   const data = await fs.readFile('export.json', 'utf-8')

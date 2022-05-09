@@ -1,4 +1,4 @@
-FROM node:14
+FROM --platform=linux/amd64 node:14
 
 WORKDIR /workspace
 
@@ -13,10 +13,10 @@ ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils 
 xvfb x11vnc x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
 
 COPY package.json .
-COPY yarn.lock .
+COPY package-lock.json .
 
-RUN yarn
+RUN npm install
 
 COPY . .
 
-CMD Xvfb :99 -screen 0 1024x768x16 & yarn start
+CMD Xvfb :99 -screen 0 1024x768x16 & npm start

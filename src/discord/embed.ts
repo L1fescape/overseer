@@ -1,10 +1,11 @@
-import * as Discord from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 
 import { PlayerInfo } from '../check'
 import { getSteamLink } from '../utils/steam'
 import { reportCountToString, reportersToString } from '../utils/reports'
 import { getRankFromNum, getColorFromRankNum, getCSGOStatsMDLink, colors } from '../utils/ranks'
 
+export const asyncSendEmbed = async (embed: MessageEmbed, msg: Message) => msg.channel.send(embed)
 
 const defaultAvatar = 'https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png'
 
@@ -13,7 +14,7 @@ export function getEmbed({ steamId, profile, csgoStats, cheater, faceitStats }: 
   const username = profile ? profile.personaname : steamId
   const color = cheater ? colors.red : getColorFromRankNum(csgoStats.rankNum)
 
-  const playerEmbed = new Discord.MessageEmbed()
+  const playerEmbed = new MessageEmbed()
     .setColor(color)
     .setTitle(username)
     .setURL(getSteamLink(steamId))

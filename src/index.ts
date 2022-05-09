@@ -1,84 +1,50 @@
-import * as http from 'http'
-import * as Discord from 'discord.js'
-import { processCheck, processCheckBulk, playerInfoToString } from './check'
-import { processCheater } from './cheater'
-import { processWhitelist } from './whitelist'
-import { getEmbed } from './embed'
+import { Client, Intents, MessageEmbed } from 'discord.js'
+import { REST } from '@discordjs/rest'
+import { Routes } from 'discord-api-types/v9'
+import * as express from 'express'
 
-const client = new Discord.Client()
+import { COMMANDS, ARGS, slashCommands, processCheater, processWhitelist } from './discord/commands'
+import { getEmbed, asyncSendEmbed } from './discord/embed'
+import { CHECK_PREFIX, playerInfoToString, processCheck, processCheckBulk } from './check'
+import { getEnvVars } from './utils/envVars'
 
-const SERVER_ID = "205602433429143562"
-const COMMAND_PREFIX = ''
-
-const enum COMMANDS {
-  Report = 'report',
-  Check = 'check',
-  Whitelist = 'whitelist',
-}
-
-const enum ARGS {
-  SteamURL = 'steam_url',
-}
-
-interface SlashCommandArgument {
-  value: string
-  type: number
-  name: string
-}
+const { PORT, DISCORD_CLIENT_ID, DISCORD_GUILD_ID, DISCORD_TOKEN } = getEnvVars()
+const rest = new REST({ version: '9' }).setToken(DISCORD_TOKEN)
+const intents = new Intents([Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES])
+const client = new Client({ intents })
+const server = express()
 
 client.on('ready', async () => {
-  console.log(`Logged in as ${client.user.tag}!`)
+  console.log(`Logged in to discord as ${client.user.tag}`)
 
-  const commands = [{
-    name: `${COMMAND_PREFIX}${COMMANDS.Report}`,
-    description: "Report a cheater",
-    options: [{
-      name: ARGS.SteamURL,
-      description: "steam url or id",
-      type: 3,
-      required: true,
-    }]
-  }, {
-    name: `${COMMAND_PREFIX}${COMMANDS.Check}`,
-    description: "Check csgo stats",
-    options: [{
-      name: ARGS.SteamURL,
-      description: "Steam URL, Steam ID, or output from `status` command",
-      type: 3,
-      required: true,
-    }]
-  }, {
-    name: `${COMMAND_PREFIX}${COMMANDS.Whitelist}`,
-    description: "Whitelist a player",
-    options: [{
-      name: ARGS.SteamURL,
-      description: "steam url or id",
-      type: 3,
-      required: true,
-    }]
-  }]
+  try {
+    console.log('Started refreshing discord slash (/) commands')
+    // unregister all previous slash commands
+    const commandsRoute = Routes.applicationGuildCommands(DISCORD_CLIENT_ID, DISCORD_GUILD_ID)
+    await rest.get(commandsRoute)
+      .then((data: any[]) => {
+          const promises = [];
+          for (const command of data) {
+              promises.push(rest.delete(`/${commandsRoute}/${command.id}`))
+          }
+          return Promise.all(promises)
+      })
+    // register all slash commands
+    await rest.put(
+      Routes.applicationGuildCommands(DISCORD_CLIENT_ID, DISCORD_GUILD_ID),
+      { body: slashCommands },
+    )
+    console.log('Successfully reloaded discord slash (/) commands')
+  } catch (error) {
+    console.log('Error reloading discord slash (/) commands')
+    console.error(error)
+  }
 
-  commands.forEach(commandData => (
-    // @ts-ignore
-    client.api.applications(client.user.id).guilds(SERVER_ID).commands.post({
-      data: commandData,
-    })
-  ))
-  // deregister commands
-  // // @ts-ignore
-  // const registeredCommands = await client.api.applications(client.user.id).guilds(SERVER_ID).commands.get()
-  // // @ts-ignore
-  // registeredCommands.forEach(commandData => {
-  //   // @ts-ignore
-  //   client.api.applications(client.user.id).guilds(SERVER_ID).commands(commandData.id).delete()
-  // })
+  client.on('interactionCreate', async interaction => {
+    if (!interaction.isCommand()) return
 
-  // @ts-ignore
-  client.ws.on('INTERACTION_CREATE', async interaction => {
-    const command = interaction.data.name.toLowerCase().replace(COMMAND_PREFIX, '')
-    const args = interaction.data.options as SlashCommandArgument[]
-
-    const steamUrl = args.find(arg => arg.name === ARGS.SteamURL).value
+    const command = interaction.commandName
+    const steamUrl = interaction.options.getString(ARGS.SteamURL)
     const reporter = interaction.member.user.username
 
     let response: string
@@ -108,35 +74,29 @@ client.on('ready', async () => {
   })
 })
 
-const asyncSendEmbed = async (embed: Discord.MessageEmbed, msg: Discord.Message) => msg.channel.send(embed)
-
 client.on('message', async message => {
-  const command = '!check'
-	if (!message.content.startsWith(command) || message.author.bot) return;
+	if (message.author.bot) return
 
   const respMessage = await message.channel.send('Checking...')
 
-	const input = message.content.slice(command.length).trim()
-  let embeds: Discord.MessageEmbed[] = []
-  if (input.indexOf('#') !== -1) {
-    const players = await processCheckBulk(input)
+	const input = message.content.trim()
+  let embeds: MessageEmbed[] = []
+  if (input.indexOf(CHECK_PREFIX) > -1) {
+    const players = await processCheckBulk(input, message)
     embeds = players.map(player => getEmbed(player))
-  } else {
-    embeds.push(getEmbed(await processCheck(input)))
+  } else if (input.indexOf('!check') === 0) {
+    embeds.push(getEmbed(await processCheck(input, message)))
   }
   
   await Promise.all(embeds.map(embed => asyncSendEmbed(embed, message)))
   await respMessage.delete()
 })
 
-
-const server = http.createServer((_, res) => {
-  res.writeHead(200);
-  res.end("My first server!");
+server.use('*', function(_, res) {
+  res.send('hi!')
 })
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
 
-server.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`)
-  client.login(process.env.DISCORD_TOKEN)
+server.listen(PORT, function() {
+  console.log('express server started on', PORT)
+  client.login(DISCORD_TOKEN)
 })

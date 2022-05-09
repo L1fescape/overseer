@@ -13,6 +13,6 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "scripts"],
   "exclude": ["**/*.test.ts", "**/*.spec.ts"]
 }
