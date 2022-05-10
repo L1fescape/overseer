@@ -1,4 +1,4 @@
-import { Client, Intents, MessageEmbed } from 'discord.js'
+import { Client, Intents } from 'discord.js'
 import * as express from 'express'
 
 import { onMessageHandler, onReadyHandler } from './discord/handlers'

@@ -1,18 +1,17 @@
-import { Message, MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed, ColorResolvable } from 'discord.js'
 
 import { PlayerInfo } from '../check'
 import { getSteamLink } from '../utils/steam'
 import { reportCountToString, reportersToString } from '../utils/reports'
 import { getRankFromNum, getColorFromRankNum, getCSGOStatsMDLink, colors } from '../utils/ranks'
 
-export const asyncSendEmbed = async (embed: MessageEmbed, msg: Message) => msg.channel.send(embed)
-
 const defaultAvatar = 'https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png'
 
+export const asyncSendEmbed = async (embed: MessageEmbed, msg: Message) => msg.channel.send({ embeds: [embed] })
 
 export function getEmbed({ steamId, profile, csgoStats, cheater, faceitStats }: PlayerInfo) {
   const username = profile ? profile.personaname : steamId
-  const color = cheater ? colors.red : getColorFromRankNum(csgoStats.rankNum)
+  const color = (cheater ? colors.red : getColorFromRankNum(csgoStats.rankNum)) as ColorResolvable
 
   const playerEmbed = new MessageEmbed()
     .setColor(color)
@@ -29,6 +28,7 @@ export function getEmbed({ steamId, profile, csgoStats, cheater, faceitStats }: 
   if (faceitStats) {
     playerEmbed
       .addFields(
+        // @ts-ignore
         { name: 'Faceit', value: `[${faceitStats.link}](${faceitStats.link})` },
         { name: 'Rank', value: faceitStats.rank, inline: true },
         { name: 'K/D', value: faceitStats.kd, inline: true },

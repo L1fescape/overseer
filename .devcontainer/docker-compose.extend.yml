@@ -4,7 +4,7 @@ services:
     container_name: dev.overseer
     build:
       context: .
-      dockerfile: .devcontainer/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "3003"
     volumes:

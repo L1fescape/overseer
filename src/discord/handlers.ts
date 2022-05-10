@@ -1,6 +1,6 @@
 import { Client, Message, MessageEmbed, CommandInteraction } from 'discord.js'
 import { REST } from '@discordjs/rest'
-import { Routes } from 'discord-api-types/v9'
+import { Routes } from 'discord-api-types/v10'
 
 import { getEmbed, asyncSendEmbed } from './embed'
 import { CHECK_PREFIX, playerInfoToString, processCheck, processCheckBulk } from '../check'
