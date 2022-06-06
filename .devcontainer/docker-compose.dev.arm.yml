@@ -1,0 +1,4 @@
+version: "3.8"
+services:
+  dev:
+    platform: linux/amd64/v8

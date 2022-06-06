@@ -9,7 +9,7 @@ const intents = new Intents([Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES,
 
 const client = new Client({ intents })
 client.on('ready', () => onReadyHandler(client))
-client.on('message', onMessageHandler)
+client.on('messageCreate', onMessageHandler)
 
 const server = express()
 server.use('*', (_, res) => res.send('hi!'))

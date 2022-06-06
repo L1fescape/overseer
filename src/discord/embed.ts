@@ -1,9 +1,9 @@
 import { Message, MessageEmbed, ColorResolvable } from 'discord.js'
 
-import { PlayerInfo } from '../check'
-import { getSteamLink } from '../utils/steam'
-import { reportCountToString, reportersToString } from '../utils/reports'
-import { getRankFromNum, getColorFromRankNum, getCSGOStatsMDLink, colors } from '../utils/ranks'
+import { PlayerInfo } from '@/check'
+import { getSteamLink } from '@/services/steam'
+import { reportCountToString, reportersToString } from '@/utils/reports'
+import { getRankFromNum, getColorFromRankNum, getCSGOStatsMDLink, colors } from '@/utils/ranks'
 
 const defaultAvatar = 'https://community.cloudflare.steamstatic.com/public/shared/images/responsive/share_steam_logo.png'
 

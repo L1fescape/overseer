@@ -5,13 +5,18 @@
   "description": "Discord bot for checking csgo and faceit player stats",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node build/index.js",
-    "build": "tsc",
+    "start": "npm run clean && npm run build && npm run app",
+    "app": "node build/src/index.js",
+    "build": "tsc && tsc-alias",
+    "clean": "rimraf build/*",
     "import": "ts-node src/scripts/import.ts",
-    "export": "ts-node src/scripts/export.ts"
+    "export": "ts-node src/scripts/export.ts",
+    "docker": "docker-compose up --build -d",
+    "docker:arm": "docker-compose -f docker-compose.yml -f docker-compose.arm.yml up --build -d"
   },
   "dependencies": {
     "@discordjs/rest": "^0.4.0",
+    "@types/express": "^4.17.13",
     "@types/node": "^15.3.0",
     "@types/redis": "^2.8.28",
     "@types/steamid": "^1.1.0",
@@ -22,16 +27,17 @@
     "discord-api-types": "^0.30.0",
     "discord.js": "^13.6.0",
     "express": "^4.18.1",
-    "puppeteer": "^5.0.0",
-    "puppeteer-extra": "^3.1.18",
-    "puppeteer-extra-plugin-stealth": "^2.7.8",
+    "puppeteer": "^14.2.1",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
     "redis": "^3.1.2",
+    "rimraf": "^3.0.2",
     "steamid": "^1.1.3",
     "ts-node": "^10.0.0",
     "typescript": "^4.6.4"
   },
+  "license": "ISC",
   "devDependencies": {
-    "@types/express": "^4.17.13"
-  },
-  "license": "ISC"
+    "tsc-alias": "^1.6.9"
+  }
 }

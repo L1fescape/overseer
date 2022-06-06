@@ -1,7 +1,7 @@
 import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 
-import { Report } from './db'
+import { Report } from '@/db'
 
 dayjs.extend(relativeTime)
 

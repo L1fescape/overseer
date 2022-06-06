@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs'
-import { exportDB } from '../src/utils/db'
+import { exportDB } from '@/db'
 
 (async () => {
   const exported = await exportDB()
