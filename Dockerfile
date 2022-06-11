@@ -20,4 +20,6 @@ RUN npm install
 
 COPY . .
 
-CMD Xvfb :99 -screen 0 1024x768x16 & npm start
+RUN npm run build
+
+CMD Xvfb :99 -screen 0 1024x768x16 & npm run app

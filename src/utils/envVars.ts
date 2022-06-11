@@ -2,13 +2,15 @@ const DISCORD_TOKEN = process.env.DISCORD_TOKEN
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID
 const DISCORD_GUILD_ID = process.env.DISCORD_GUILD_ID
 const DISCORD_ALLOWED_CHANNELS_STR = process.env.DISCORD_ALLOWED_CHANNELS
+const DISCORD_COMMAND_PREFIX = process.env.DISCORD_COMMAND_PREFIX || ''
 const PORT = process.env.PORT || '3000'
 
 interface EnvVars {
   DISCORD_TOKEN: string
   DISCORD_CLIENT_ID: string
   DISCORD_GUILD_ID: string
-  DISCORD_ALLOWED_CHANNELS?: string[]
+  DISCORD_ALLOWED_CHANNELS: string[]
+  DISCORD_COMMAND_PREFIX: string
   PORT: string
 }
 
@@ -39,6 +41,7 @@ export function getEnvVars(): EnvVars {
     DISCORD_CLIENT_ID,
     DISCORD_GUILD_ID,
     DISCORD_ALLOWED_CHANNELS,
+    DISCORD_COMMAND_PREFIX,
     PORT,
   }
 }

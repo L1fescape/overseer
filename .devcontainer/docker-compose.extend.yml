@@ -8,8 +8,8 @@ services:
     ports:
       - "3003"
     volumes:
-      - ./:/workspace:cached
-      - overseer-node_modules:/workspace/node_modules
+      - ./:/workspaces/overseer:cached
+      - overseer-node_modules:/workspaces/overseer/node_modules
       - overseer-build:/workspace/build
     env_file:
       - .devcontainer/.env.devcontainer

@@ -4,7 +4,7 @@
     "../docker-compose.yml",
     "./docker-compose.extend.yml"
   ],
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspaces/overseer",
   "service": "dev",
   "runServices": ["db", "dev"],
   "extensions": [
