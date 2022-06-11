@@ -1,8 +1,6 @@
 import * as cheerio from 'cheerio'
-import puppeteer from 'puppeteer-extra'
-const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 
-puppeteer.use(StealthPlugin())
+import { getPuppeteerBrowser } from '@/utils/puppeteer'
 
 export interface CSGOStats {
   kda: string
@@ -14,9 +12,7 @@ export interface CSGOStats {
 
 export async function getCSGOStats(steamId64: string): Promise<CSGOStats> {
   const url = `https://csgostats.gg/player/${steamId64}`
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
+  const browser = await getPuppeteerBrowser()
   let html = ''
 
   try { 

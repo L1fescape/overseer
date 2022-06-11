@@ -3,11 +3,11 @@ import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v10'
 
 import { getEmbed, asyncSendEmbed } from './embed'
-import { CHECK_PREFIX, playerInfoToString, processCheck, processCheckBulk } from '../check'
+import { CHECK_PREFIX, STATUS_PREFIX, playerInfoToString, processCheck } from '../check'
 import { COMMANDS, ARGS, slashCommands, processCheater, processWhitelist } from './commands'
 import { getEnvVars } from '../utils/envVars'
 
-const { DISCORD_CLIENT_ID, DISCORD_GUILD_ID, DISCORD_TOKEN } = getEnvVars()
+const { DISCORD_CLIENT_ID, DISCORD_GUILD_ID, DISCORD_TOKEN, DISCORD_ALLOWED_CHANNELS } = getEnvVars()
 const rest = new REST({ version: '9' }).setToken(DISCORD_TOKEN)
 
 export async function onReadyHandler(client: Client) {
@@ -53,8 +53,8 @@ async function onInteractionCreateHandler(interaction: CommandInteraction) {
       response = await processCheater(steamUrl, reporter)
       break
     case COMMANDS.Check:
-      const player = await processCheck(steamUrl)
-      response = player ? playerInfoToString(player) : 'Could not lookup user'
+      const players = await processCheck(steamUrl)
+      response = players.length ? playerInfoToString(players[0]) : 'Could not lookup user'
       break
     case COMMANDS.Whitelist:
       response = await processWhitelist(steamUrl, reporter)
@@ -73,20 +73,24 @@ async function onInteractionCreateHandler(interaction: CommandInteraction) {
 }
 
 export async function onMessageHandler(message: Message) {
+	const input = message.content.trim()
+
 	if (message.author.bot) return
+  if (input.indexOf(CHECK_PREFIX) === -1 && input.indexOf(STATUS_PREFIX) === -1) return
+
+  if (DISCORD_ALLOWED_CHANNELS.length && DISCORD_ALLOWED_CHANNELS.indexOf(message.channelId) === -1) {
+    await message.channel.send('Wrong channel dummy')
+    return
+  }
 
   const respMessage = await message.channel.send('Checking...')
-
-	const input = message.content.trim()
-  let embeds: MessageEmbed[] = []
-  if (input.indexOf(CHECK_PREFIX) > -1) {
-    const players = await processCheckBulk(input, message)
-    embeds = players.map(player => getEmbed(player))
-  } else if (input.indexOf('!check') === 0) {
-    embeds.push(getEmbed(await processCheck(input, message)))
+  try {
+    const players = await processCheck(input)
+    const embeds: MessageEmbed[] = players.map(player => getEmbed(player))
+    await Promise.all(embeds.map(embed => asyncSendEmbed(embed, message)))
+  } catch (e) {
+    await message.channel.send(`There was an error fetching stats: ${e.message}`)
+  } finally {
+    await respMessage.delete()
   }
-  
-  await Promise.all(embeds.map(embed => asyncSendEmbed(embed, message)))
-  await respMessage.delete()
-
 }

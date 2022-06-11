@@ -11,6 +11,7 @@ services:
       - .env
     volumes:
       - .:/opt/overseer
+    restart: always
     depends_on:
       - db
 

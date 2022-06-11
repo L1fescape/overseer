@@ -1,7 +1,7 @@
 import { Message, MessageEmbed, ColorResolvable } from 'discord.js'
 
 import { PlayerInfo } from '../check'
-import { getSteamLink } from '../utils/steam'
+import { getSteamLink } from '../services/steam'
 import { reportCountToString, reportersToString } from '../utils/reports'
 import { getRankFromNum, getColorFromRankNum, getCSGOStatsMDLink, colors } from '../utils/ranks'
 
@@ -25,14 +25,15 @@ export function getEmbed({ steamId, profile, csgoStats, cheater, faceitStats }: 
       { name: 'Games', value: csgoStats.matches || 'N/A', inline: true },
     )
 
+  console.log(faceitStats)
   if (faceitStats) {
     playerEmbed
       .addFields(
         // @ts-ignore
         { name: 'Faceit', value: `[${faceitStats.link}](${faceitStats.link})` },
-        { name: 'Rank', value: faceitStats.rank, inline: true },
-        { name: 'K/D', value: faceitStats.kd, inline: true },
-        { name: 'Games', value: faceitStats.matches, inline: true },
+        { name: 'Rank', value: `${faceitStats.rank}`, inline: true },
+        { name: 'K/D', value: `${faceitStats.kd}`, inline: true },
+        { name: 'Games', value: `${faceitStats.matches}`, inline: true },
       )
   }
   

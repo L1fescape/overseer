@@ -8,7 +8,7 @@
 
 In csgo open the dev console and type `status` to get a list of players that are currently connected to the server.
 
-Copy and paste the output of this command into a channel 
+Copy and paste the output of this command into a channel and the bot will parse the steam ids, lookup each player's steam csgo stats and faceit stats, and then return the result as an embed in the channel.
 
 ## Running the Application
 

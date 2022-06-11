@@ -1,6 +1,6 @@
-import { addCheater, addWhitelist, Whitelist } from '../utils/db'
-import { getSteam, getSteamProfile, getSteamMDLink } from '../utils/steam'
-import { reportCountToString, reportsToString } from '../utils/reports'
+import { addCheater, addWhitelist, Whitelist } from '@/utils/db'
+import { getSteam, getSteamProfile, getSteamMDLink } from '@/services/steam'
+import { reportCountToString, reportsToString } from '@/utils/reports'
 
 const COMMAND_PREFIX = process.env.DISCORD_COMMAND_PREFIX
 
