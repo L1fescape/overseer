@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "Andrew Kennedy <akennedy2292@gmail.com> (https://l1fescape.com)",
   "description": "Discord bot for checking csgo and faceit player stats",
-  "main": "index.js",
+  "main": "build/src/index.js",
   "scripts": {
     "start": "npm run clean && npm run build && npm run app",
     "app": "node build/src/index.js",

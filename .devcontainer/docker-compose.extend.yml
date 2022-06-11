@@ -12,7 +12,7 @@ services:
       - overseer-node_modules:/workspace/node_modules
       - overseer-build:/workspace/build
     env_file:
-      - .devcontainer/devcontainer.env
+      - .devcontainer/.env.devcontainer
     depends_on:
       - db
     command: /bin/sh -c "while sleep 1000; do :; done"
@@ -20,3 +20,4 @@ services:
 volumes:
   overseer-node_modules:
   overseer-build:
+  redis_data:
