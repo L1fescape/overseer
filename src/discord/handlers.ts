@@ -39,7 +39,7 @@ export async function onReadyHandler(client: Client) {
   client.on('interactionCreate', onInteractionCreateHandler(client))
 }
 
-async function onInteractionCreateHandler(client: Client) {
+function onInteractionCreateHandler(client: Client) {
   return async function (interaction: CommandInteraction) {
     if (!interaction.isCommand()) return
 
