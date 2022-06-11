@@ -76,7 +76,7 @@ export async function onMessageHandler(message: Message) {
 	const input = message.content.trim()
 
 	if (message.author.bot) return
-  if (input.indexOf(CHECK_PREFIX) === -1 && input.indexOf(STATUS_PREFIX) === -1) return
+  if (input.indexOf(CHECK_PREFIX) !== 0 && input.indexOf(STATUS_PREFIX) !== 0) return
 
   if (DISCORD_ALLOWED_CHANNELS.length && DISCORD_ALLOWED_CHANNELS.indexOf(message.channelId) === -1) {
     await message.channel.send('Wrong channel dummy')
