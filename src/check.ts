@@ -1,11 +1,14 @@
 import * as SteamID from 'steamid'
 
-import { SteamProfile, getSteam, getSteamProfile, getSteamMDLink } from './utils/steam'
-import { CSGOStats, getCSGOStats } from './utils/csgostats'
-import { Cheater, getCheater, getWhitelist } from './utils/db'
-import { reportCountToString } from './utils/reports'
-import { getCSGOStatsMDLink, getRankFromNum } from './utils/ranks'
-import { getFaceit, FaceitStats } from './utils/faceit'
+import { SteamProfile, getSteam, getSteamProfile, getSteamMDLink } from './services/steam'
+import { CSGOStats, getCSGOStats } from '@/services/csgostats'
+import { Cheater, getCheater, getWhitelist } from '@/utils/db'
+import { reportCountToString } from '@/utils/reports'
+import { getCSGOStatsMDLink, getRankFromNum } from '@/utils/ranks'
+import { getFaceit, FaceitStats } from '@/services/faceit'
+
+export const STATUS_PREFIX = '# userid name uniqueid'
+export const CHECK_PREFIX = '!check'
 
 const asyncGetPlayer = async (id: string) => await getSteam(id)
 const asyncGetWhitelist = async (id: string) => await getWhitelist(id)
@@ -29,17 +32,7 @@ CSGO Stats: ${getCSGOStatsMDLink(steamId)}
   return str
 }
 
-export async function processCheck(steamUrl: string): Promise<PlayerInfo> {
-  const steam = await getSteam(steamUrl)
-  if (!steam) {
-    console.log('Error getting steam id from url')
-    return null
-  }
-
-  return await getPlayerInfo(steam)
-}
-
-export async function processCheckBulk(input: string): Promise<PlayerInfo[]> {
+export async function processCheck(input: string): Promise<PlayerInfo[]> {
   const playerIds: string[] = []
   const lines = input.split('\n')
   lines.forEach(line => {

@@ -1,8 +1,6 @@
 import * as cheerio from 'cheerio'
-import puppeteer from 'puppeteer-extra'
-const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 
-puppeteer.use(StealthPlugin())
+import { getPuppeteerBrowser } from '@/utils/puppeteer'
 
 export interface CSGOStats {
   url: string
@@ -34,9 +32,7 @@ export interface FaceitStats {
 
 export async function getFaceit(steamId64: string): Promise<FaceitStats> {
   const url = `https://faceitfinder.com/profile/${steamId64}`
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
+  const browser = await getPuppeteerBrowser()
   let html = ''
 
   try { 
