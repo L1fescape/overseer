@@ -19,11 +19,11 @@ export async function onReadyHandler(client: Client) {
     const commandsRoute = Routes.applicationGuildCommands(DISCORD_CLIENT_ID, DISCORD_GUILD_ID)
     await rest.get(commandsRoute)
       .then((data: any[]) => {
-          const promises = [];
-          for (const command of data) {
-              promises.push(rest.delete(`/${commandsRoute}/${command.id}`))
-          }
-          return Promise.all(promises)
+        const promises = [];
+        for (const command of data) {
+          promises.push(rest.delete(`/${commandsRoute}/${command.id}`))
+        }
+        return Promise.all(promises)
       })
     // register all slash commands
     await rest.put(
@@ -36,40 +36,42 @@ export async function onReadyHandler(client: Client) {
     console.error(error)
   }
 
-  client.on('interactionCreate', onInteractionCreateHandler)
+  client.on('interactionCreate', onInteractionCreateHandler(client))
 }
 
-async function onInteractionCreateHandler(interaction: CommandInteraction) {
-  if (!interaction.isCommand()) return
+async function onInteractionCreateHandler(client: Client) {
+  return async function (interaction: CommandInteraction) {
+    if (!interaction.isCommand()) return
 
-  const command = interaction.commandName
-  const steamUrl = interaction.options.getString(ARGS.SteamURL)
-  const reporter = interaction.member.user.username
+    const command = interaction.commandName
+    const steamUrl = interaction.options.getString(ARGS.SteamURL)
+    const reporter = interaction.member.user.username
 
-  let response: string
+    let response: string
 
-  switch (command) {
-    case COMMANDS.Report:
-      response = await processCheater(steamUrl, reporter)
-      break
-    case COMMANDS.Check:
-      const players = await processCheck(steamUrl)
-      response = players.length ? playerInfoToString(players[0]) : 'Could not lookup user'
-      break
-    case COMMANDS.Whitelist:
-      response = await processWhitelist(steamUrl, reporter)
-      break
-  }
+    switch (command) {
+      case COMMANDS.Report:
+        response = await processCheater(steamUrl, reporter)
+        break
+      case COMMANDS.Check:
+        const players = await processCheck(steamUrl)
+        response = players.length ? playerInfoToString(players[0]) : 'Could not lookup user'
+        break
+      case COMMANDS.Whitelist:
+        response = await processWhitelist(steamUrl, reporter)
+        break
+    }
 
-  // @ts-ignore
-  client.api.interactions(interaction.id, interaction.token).callback.post({
-    data: {
-      type: 4,
+    // @ts-ignore
+    client.api.interactions(interaction.id, interaction.token).callback.post({
       data: {
-        content: response
+        type: 4,
+        data: {
+          content: response
+        },
       },
-    },
-  })
+    })
+  }
 }
 
 export async function onMessageHandler(message: Message) {
