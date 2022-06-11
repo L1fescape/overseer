@@ -18,3 +18,8 @@ services:
   db:
     container_name: db.overseer
     image: "redis"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
