@@ -25,7 +25,6 @@ export function getEmbed({ steamId, profile, csgoStats, cheater, faceitStats }: 
       { name: 'Games', value: csgoStats.matches || 'N/A', inline: true },
     )
 
-  console.log(faceitStats)
   if (faceitStats) {
     playerEmbed
       .addFields(
