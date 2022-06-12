@@ -1,11 +1,11 @@
 import * as SteamID from 'steamid'
 
 import { SteamProfile, getSteam, getSteamProfile, getSteamMDLink } from './services/steam'
-import { CSGOStats, getCSGOStats } from '@/services/csgostats'
-import { Cheater, getCheater, getWhitelist } from '@/utils/db'
-import { reportCountToString } from '@/utils/reports'
-import { getCSGOStatsMDLink, getRankFromNum } from '@/utils/ranks'
-import { getFaceit, FaceitStats } from '@/services/faceit'
+import { CSGOStats, getCSGOStats } from './services/csgostats'
+import { Cheater, getCheater, getWhitelist } from './utils/db'
+import { reportCountToString } from './utils/reports'
+import { getCSGOStatsMDLink, getRankFromNum } from './utils/ranks'
+import { getFaceit, FaceitStats } from './services/faceit'
 
 export const STATUS_PREFIX = '# userid name uniqueid'
 export const CHECK_PREFIX = '!check'

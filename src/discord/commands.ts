@@ -1,9 +1,6 @@
-import { addCheater, addWhitelist, Whitelist } from '@/utils/db'
-import { getSteam, getSteamProfile, getSteamMDLink } from '@/services/steam'
-import { reportCountToString, reportsToString } from '@/utils/reports'
-import { getEnvVars } from '@/utils/envVars'
-
-const { DISCORD_COMMAND_PREFIX } = getEnvVars()
+import { addCheater, addWhitelist, Whitelist } from '../utils/db'
+import { getSteam, getSteamProfile, getSteamMDLink } from '../services/steam'
+import { reportCountToString, reportsToString } from '../utils/reports'
 
 export const enum COMMANDS {
   Report = 'report',
@@ -16,7 +13,7 @@ export const enum ARGS {
 }
 
 export const slashCommands = [{
-  name: `${DISCORD_COMMAND_PREFIX}${COMMANDS.Report}`,
+  name: COMMANDS.Report,
   description: "Report a cheater",
   options: [{
     name: ARGS.SteamURL,
@@ -25,7 +22,7 @@ export const slashCommands = [{
     required: true,
   }]
 }, {
-  name: `${DISCORD_COMMAND_PREFIX}${COMMANDS.Check}`,
+  name: COMMANDS.Check,
   description: "Check csgo stats",
   options: [{
     name: ARGS.SteamURL,
@@ -34,7 +31,7 @@ export const slashCommands = [{
     required: true,
   }]
 }, {
-  name: `${DISCORD_COMMAND_PREFIX}${COMMANDS.Whitelist}`,
+  name: COMMANDS.Whitelist,
   description: "Whitelist a player",
   options: [{
     name: ARGS.SteamURL,

@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 node:16.9
 
-WORKDIR /workspace
+WORKDIR /workspaces/overseer
 
 ENV DISPLAY :99
 

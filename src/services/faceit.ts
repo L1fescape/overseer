@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
 
-import { getPuppeteerBrowser } from '@/utils/puppeteer'
+import { getPuppeteerBrowser } from '../utils/puppeteer'
 
 export interface CSGOStats {
   url: string

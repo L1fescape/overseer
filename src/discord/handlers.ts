@@ -10,32 +10,40 @@ import { getEnvVars } from '../utils/envVars'
 const { DISCORD_CLIENT_ID, DISCORD_GUILD_ID, DISCORD_TOKEN, DISCORD_ALLOWED_CHANNELS } = getEnvVars()
 const rest = new REST({ version: '9' }).setToken(DISCORD_TOKEN)
 
+export async function deregisterCommands() {
+  console.log('Started removing old discord slash (/) commands')
+  // unregister all previous slash commands
+  const commandsRoute = Routes.applicationGuildCommands(DISCORD_CLIENT_ID, DISCORD_GUILD_ID)
+  await rest.get(commandsRoute)
+    .then((data: any[]) => {
+      const promises = [];
+      for (const command of data) {
+        promises.push(rest.delete(`/${commandsRoute}/${command.id}`))
+      }
+      return Promise.all(promises)
+    })
+  console.log('Finished removing old discord slash (/) commands')
+}
+
+export async function registerCommands() {
+  console.log('Started adding new discord slash (/) commands')
+  // register all slash commands
+  await rest.put(
+    Routes.applicationGuildCommands(DISCORD_CLIENT_ID, DISCORD_GUILD_ID),
+    { body: slashCommands },
+  )
+  console.log('Finished adding new discord slash (/) commands')
+}
+
 export async function onReadyHandler(client: Client) {
   console.log(`Logged in to discord as ${client.user.tag}`)
-
   try {
-    console.log('Started refreshing discord slash (/) commands')
-    // unregister all previous slash commands
-    const commandsRoute = Routes.applicationGuildCommands(DISCORD_CLIENT_ID, DISCORD_GUILD_ID)
-    await rest.get(commandsRoute)
-      .then((data: any[]) => {
-        const promises = [];
-        for (const command of data) {
-          promises.push(rest.delete(`/${commandsRoute}/${command.id}`))
-        }
-        return Promise.all(promises)
-      })
-    // register all slash commands
-    await rest.put(
-      Routes.applicationGuildCommands(DISCORD_CLIENT_ID, DISCORD_GUILD_ID),
-      { body: slashCommands },
-    )
-    console.log('Successfully reloaded discord slash (/) commands')
-  } catch (error) {
-    console.log('Error reloading discord slash (/) commands')
-    console.error(error)
+    await deregisterCommands()
+    await registerCommands()
+  } catch (e) {
+    console.log('Error updating discord slash (/) commands')
+    console.error(e)
   }
-
   client.on('interactionCreate', onInteractionCreateHandler(client))
 }
 
@@ -46,6 +54,7 @@ function onInteractionCreateHandler(client: Client) {
     const command = interaction.commandName
     const steamUrl = interaction.options.getString(ARGS.SteamURL)
     const reporter = interaction.member.user.username
+    console.log(command)
 
     let response: string
 

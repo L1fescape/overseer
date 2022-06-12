@@ -1,7 +1,9 @@
 import axios from 'axios'
 import * as SteamID from 'steamid'
 
-const STEAM_API_KEY = process.env.STEAM_API_KEY
+import { getEnvVars } from '../utils/envVars'
+
+const { STEAM_API_KEY } = getEnvVars()
 
 const vanityCheckURL =
   'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/'

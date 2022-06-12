@@ -10,7 +10,7 @@ services:
     volumes:
       - ./:/workspaces/overseer:cached
       - overseer-node_modules:/workspaces/overseer/node_modules
-      - overseer-build:/workspace/build
+      - overseer-build:/workspaces/overseer/build
     env_file:
       - .devcontainer/.env.devcontainer
     depends_on:
