@@ -12,7 +12,7 @@ client.on('ready', () => onReadyHandler(client))
 client.on('messageCreate', onMessageHandler)
 
 const server = express()
-server.use('*', (_, res) => res.send('hi!'))
+server.use('*', (_, res) => res.send(client.isReady()))
 server.listen(PORT, function() {
   console.log('express server started on', PORT)
   client.login(DISCORD_TOKEN)
